@@ -28,6 +28,11 @@
 # NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 # SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
+global CK
+global CS
+global AT
+global AS
+
 def current_time():
     import time
     t = time.time()
@@ -93,12 +98,16 @@ def oauth_genhead(vck, vcs, vat, vas, status):
     return s
 
 def tweet(s):
+    global CK
+    global CS
+    global AT
+    global AS
     body = 'status=%s' % (enc_percent(s))
     oauth_head = oauth_genhead(CK, CS, AT, AS, s)
     header = '''POST /1.1/statuses/update.json?include_entities=true HTTP/1.1
 Accept: */*
 Connection: close
-User-Agent: Pot Prant Bot v0.1
+User-Agent: TweetBot v0.2
 Content-Type: application/x-www-form-urlencoded
 Authorization: 
 %s
@@ -108,28 +117,35 @@ Host: api.twitter.com
     return header + '\n' + body + '\n'
 
 ###############################################################################
+def run(temp,umid):
+    global CK
+    global CS
+    global AT
+    global AS
+    CK = ''     # CONSUMER_KEY
+    CS = ''     # CONSUMER_SECRET
+    AT = ''     # ACCESS_KEY
+    AS = ''     # ACCESS_SECRET
 
-CK = ''     # CONSUMER_KEY
-CS = ''     # CONSUMER_SECRET
-AT = ''     # ACCESS_KEY
-AS = ''     # ACCESS_SECRET
+    # time_diff = -3 * 3600                                        # Time difference
 
-time_diff = 9 * 3600                                        # Time difference
+    # import time
+    # import ntptime
 
-import time
-import ntptime
+    # while True:
+    #     try:
+    #         ntptime.settime()
+    #         break
+    #     except:
+    #         pass
 
-while True:
-    try:
-        ntptime.settime()
-        break
-    except:
-        pass
-
-t = time.localtime(time.time() + time_diff)
-time_str = '%02d/%02d/%02d %02d:%02d:%02d' % t[0:6]
-tweet_status = 'Pot plant needs water (%s)' % (time_str)
-s = tweet(tweet_status)
-f = open('tweet.txt', 'w')
-f.write(s)
-f.close()
+    # t = time.localtime(time.time() + time_diff)
+    # t = time.localtime(time.time())
+    # time_str = '%02d/%02d/%02d %02d:%02d:%02d' % t[0:6]
+    # tweet_status = 'Pot plant needs water (%s)' % (time_str)
+    # tweet_status = 'Teste de tweet a partir do ESP8266. Data atual: (%s)' % (time_str)
+    tweet_status = 'Temperatura: %dºC. Umidade: %d%%' % (temp, umid)
+    s = tweet(tweet_status)
+    f = open('tweet.txt', 'w')
+    f.write(s)
+    f.close()
