@@ -129,23 +129,40 @@ def run(temp,umid):
 
     # time_diff = -3 * 3600                                        # Time difference
 
-    # import time
-    # import ntptime
+    import time
+    import ntptime
 
-    # while True:
-    #     try:
-    #         ntptime.settime()
-    #         break
-    #     except:
-    #         pass
+    while True:
+        try:
+            ntptime.settime()
+            break
+        except:
+            pass
 
     # t = time.localtime(time.time() + time_diff)
     # t = time.localtime(time.time())
     # time_str = '%02d/%02d/%02d %02d:%02d:%02d' % t[0:6]
     # tweet_status = 'Pot plant needs water (%s)' % (time_str)
     # tweet_status = 'Teste de tweet a partir do ESP8266. Data atual: (%s)' % (time_str)
-    tweet_status = 'Temperatura: %dºC. Umidade: %d%%' % (temp, umid)
+    tweet_status = '@wreuel Temperatura: %dC. Umidade: %d%%' % (temp, umid)
     s = tweet(tweet_status)
     f = open('tweet.txt', 'w')
     f.write(s)
     f.close()
+
+def send():
+    f = open('tweet.txt').read()
+    # str = f.read(4096)
+    # f.close()
+
+    import usocket
+    import ussl
+    s=usocket.socket()
+    addr = usocket.getaddrinfo("api.twitter.com", 443)[0][-1]
+    s.connect(addr)
+    s=ussl.wrap_socket(s)
+    # print(s)
+    s.write(f)
+    # print(s.read(4096))
+    s.close()
+    # rm_tweet_txt()
