@@ -144,7 +144,7 @@ def run(temp,umid):
     # time_str = '%02d/%02d/%02d %02d:%02d:%02d' % t[0:6]
     # tweet_status = 'Pot plant needs water (%s)' % (time_str)
     # tweet_status = 'Teste de tweet a partir do ESP8266. Data atual: (%s)' % (time_str)
-    tweet_status = '@wreuel Temperatura: %dC. Umidade: %d%%' % (temp, umid)
+    tweet_status = 'Temperatura: %dC. Umidade: %d%%' % (temp, umid)
     s = tweet(tweet_status)
     f = open('tweet.txt', 'w')
     f.write(s)
